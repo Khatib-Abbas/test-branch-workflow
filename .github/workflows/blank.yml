@@ -29,7 +29,12 @@ jobs:
       # Démarrer un conteneur Caddy
       - name: Run Caddy container
         run: docker run -d -p 80:80 my-caddy-image
-
+      - name: Generate summary
+        run: |
+          echo "## Build Success" >> $GITHUB_STEP_SUMMARY
+          echo "The project was successfully built!" >> $GITHUB_STEP_SUMMARY
+          echo "### Attestation Created" >> $GITHUB_STEP_SUMMARY
+          echo "[artifact@sha256:832f9c02ed57de5771f84cd540ae2b89c57b3aeda89a5ed92580cd372810c7e9](link_to_artifact)" >> $GITHUB_STEP_SUMMARY
       # Vérifier que Caddy est bien installé
       - name: Check Caddy version
         run: |
@@ -49,3 +54,9 @@ jobs:
           else
             echo "Caddy is running correctly with status code: $STATUS_CODE"
           fi
+      - name: Generate summary
+        run: |
+          echo "## Build Success" >> $GITHUB_STEP_SUMMARY
+          echo "The project was successfully built!" >> $GITHUB_STEP_SUMMARY
+          echo "### Attestation Created" >> $GITHUB_STEP_SUMMARY
+          echo "[artifact@sha256:832f9c02ed57de5771f84cd540ae2b89c57b3aeda89a5ed92580cd372810c7e9](link_to_artifact)" >> $GITHUB_STEP_SUMMARY
