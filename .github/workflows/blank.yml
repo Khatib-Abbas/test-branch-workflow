@@ -2,8 +2,10 @@ name: Build and Test
 
 on:
   pull_request:
-    types: [opened, synchronize]
-
+    types: [opened, synchronize,push]
+  push:
+    branches:
+      - '*'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,11 +22,35 @@ jobs:
     needs: build  # Exécuter après le job 'build'
 
     steps:
+      # Checkout du dépôt
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: echo "test"
+      # Construire l'image Docker
+      - name: Build Docker image
+        run: docker build -t my-caddy-image .
 
-      - name: Run tests
-        run: echo "test"
+      # Démarrer un conteneur Caddy
+      - name: Run Caddy container
+        run: docker run -d -p 80:80 my-caddy-image
+
+      # Vérifier que Caddy est bien installé
+      - name: Check Caddy version
+        run: |
+          CADDY_VERSION=$(docker run --rm my-caddy-image caddy version)
+          if [ "$CADDY_VERSION" != "v2.4.8" ]; then
+            echo "Unexpected Caddy version: $CADDY_VERSION"
+            exit 1
+          else
+            echo "Caddy version is correct: $CADDY_VERSION"
+          fi
+
+      - name: Test Caddy HTTP response
+        run: |
+          STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}\n" http://localhost:80)
+          if [ "$STATUS_CODE" != "200" ]; then
+            echo "Unexpected status code: $STATUS_CODE"
+            exit 1
+          else
+            echo "Caddy is running correctly with status code: $STATUS_CODE"
+          fi
