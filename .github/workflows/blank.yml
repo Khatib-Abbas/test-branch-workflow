@@ -14,6 +14,12 @@ jobs:
       - name: Build the project
         run: echo "test" # Commande pour construire votre projet
 
+      # Créer une attestation de provenance pour la build
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          upload: true  # Télécharge l'attestation sur GitHub
   test:
     runs-on: ubuntu-latest
     needs: build  # Exécuter après le job 'build'
