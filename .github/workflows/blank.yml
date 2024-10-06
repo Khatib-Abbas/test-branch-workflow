@@ -13,6 +13,12 @@ jobs:
 
       - name: Build the project
         run: echo "test" # Commande pour construire votre projet
+      - name: Generate summary
+        run: |
+          echo "## Build Success" >> $GITHUB_STEP_SUMMARY
+          echo "The project was successfully built!" >> $GITHUB_STEP_SUMMARY
+          echo "### Attestation Created" >> $GITHUB_STEP_SUMMARY
+          echo "[artifact@sha256:832f9c02ed57de5771f84cd540ae2b89c57b3aeda89a5ed92580cd372810c7e9](link_to_artifact)" >> $GITHUB_STEP_SUMMARY
   test:
     runs-on: ubuntu-latest
     needs: build  # Exécuter après le job 'build'
@@ -29,12 +35,7 @@ jobs:
       # Démarrer un conteneur Caddy
       - name: Run Caddy container
         run: docker run -d -p 80:80 my-caddy-image
-      - name: Generate summary
-        run: |
-          echo "## Build Success" >> $GITHUB_STEP_SUMMARY
-          echo "The project was successfully built!" >> $GITHUB_STEP_SUMMARY
-          echo "### Attestation Created" >> $GITHUB_STEP_SUMMARY
-          echo "[artifact@sha256:832f9c02ed57de5771f84cd540ae2b89c57b3aeda89a5ed92580cd372810c7e9](link_to_artifact)" >> $GITHUB_STEP_SUMMARY
+
       # Vérifier que Caddy est bien installé
       - name: Check Caddy version
         run: |
