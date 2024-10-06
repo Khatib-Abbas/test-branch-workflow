@@ -18,8 +18,9 @@ jobs:
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          upload: true  # Télécharge l'attestation sur GitHub
+          github-token: ${{ secrets.GITHUB_TOKEN }}  # Utilisez 'github-token' à la place de 'token'
+          subject-path: ./  # Chemin du sujet de l'attestation (par exemple, le répertoire du projet)
+          show-summary: true  # Affiche un résumé de l'attestation
   test:
     runs-on: ubuntu-latest
     needs: build  # Exécuter après le job 'build'
