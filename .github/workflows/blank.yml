@@ -3,9 +3,6 @@ name: Build and Test
 on:
   pull_request:
     types: [opened, synchronize,push]
-  push:
-    branches:
-      - '*'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,13 +35,12 @@ jobs:
       - name: Check Caddy version
         run: |
           CADDY_VERSION=$(docker run --rm my-caddy-image caddy version)
-          if [ "$CADDY_VERSION" != "v2.4.8" ]; then
+          if [[ "$CADDY_VERSION" == v2.8.4* ]]; then
+            echo "Caddy version is correct: $CADDY_VERSION"
+          else
             echo "Unexpected Caddy version: $CADDY_VERSION"
             exit 1
-          else
-            echo "Caddy version is correct: $CADDY_VERSION"
           fi
-
       - name: Test Caddy HTTP response
         run: |
           STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}\n" http://localhost:80)

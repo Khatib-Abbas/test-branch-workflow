@@ -1,0 +1,7 @@
+services:
+  test-caddy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+    - "80:80"
